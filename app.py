@@ -1,5 +1,3 @@
-
-# app.py
 from flask import Flask, request, jsonify, render_template, send_from_directory, abort
 import os
 import fitz  # PyMuPDF pour l'extraction de texte
@@ -103,7 +101,8 @@ def search():
 
         if relevant_sentences:
             response = ' '.join(relevant_sentences[:10])
-            results.append({'title': title, 'content': response})
+            download_link = f'/download/{title}'
+            results.append({'title': title, 'content': response, 'download_link': download_link})
 
     return jsonify(results)
 
@@ -113,8 +112,24 @@ def uploaded_file(filename):
         abort(404)
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/download/<filename>')
+def download_file(filename):
+    if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
+        abort(404)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+@app.route('/documents')
+def documents():
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT title FROM documents")
+        rows = cursor.fetchall()
+
+    documents = [{'title': row[0], 'download_link': f'/download/{row[0]}'} for row in rows]
+
+    return render_template('documents.html', documents=documents)
+
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     init_db()
     app.run(debug=True, host='0.0.0.0', port=5000)
-

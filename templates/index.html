@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation PDF • Flask App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans antialiased">
+
+    <div class="min-h-screen flex flex-col items-center justify-center py-12">
+        <h1 class="text-4xl font-semibold mb-8">Consultation de fichiers PDF</h1>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-xl mb-4">Télécharger un PDF</h2>
+            <form id="upload-form" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept="application/pdf" class="block w-full mb-4 text-sm text-gray-700 file:py-2 file:px-4 file:rounded-lg file:border file:bg-gray-700 file:text-white" />
+                <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Télécharger</button>
+            </form>
+        </div>
+
+        <div class="my-8 text-center">
+            <span class="text-lg">OU</span>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-xl mb-4">Recherche par mot-clé</h2>
+            <form id="search-form" method="GET">
+                <input type="text" name="keyword" id="keyword" placeholder="Entrez un mot-clé" class="block w-full mb-4 p-2 rounded-lg bg-gray-700 text-white" />
+                <button type="submit" class="w-full py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white">Rechercher</button>
+            </form>
+        </div>
+
+        <div id="search-results" class="mt-8 w-full max-w-md text-left hidden">
+            <h2 class="text-xl mb-4">Résultats de recherche</h2>
+            <div id="results-list"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
+        });
+
+        document.getElementById('search-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const keyword = document.getElementById('keyword').value;
+            const response = await fetch(`/search?keyword=${encodeURIComponent(keyword)}`);
+            const data = await response.json();
+
+            console.log(data);  // Vérifiez la réponse de l'API
+
+            const resultsList = document.getElementById('results-list');
+            resultsList.innerHTML = '';
+
+            if (!Array.isArray(data) || data.length === 0) {
+                resultsList.innerHTML = '<p>Aucun résultat trouvé.</p>';
+            } else {
+                data.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.classList.add('mb-4');
+                    resultItem.innerHTML = `
+                        <h3 class="font-semibold text-lg">${result.title}</h3>
+                        <p>${result.content}</p>
+                    `;
+                    resultsList.appendChild(resultItem);
+                });
+            }
+
+            document.getElementById('search-results').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
+

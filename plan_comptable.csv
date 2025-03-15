@@ -1,0 +1,9 @@
+
+nom_compte,numero_compte,libelle
+Banque,512,Banque • Compte courant
+Caisse,531,Caisse • Fonds de trésorerie
+Clients,411,Clients • Créances clients
+Fournisseurs,401,Fournisseurs • Dettes fournisseurs
+Ventes,701,Ventes de biens et services
+Achats,607,Achats de marchandises
+

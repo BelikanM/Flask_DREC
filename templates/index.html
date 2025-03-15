@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultation PDF • Flask App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+<link rel="manifest" href="/manifest.json">
+
+
+
 </head>
 <body class="bg-gray-900 text-white font-sans antialiased">
 
@@ -78,6 +82,30 @@
             document.getElementById('search-results').classList.remove('hidden');
         });
     </script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/static/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker enregistré avec succès:', registration);
+                })
+                .catch((error) => {
+                    console.log('Erreur lors de l’enregistrement du Service Worker:', error);
+                });
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
 

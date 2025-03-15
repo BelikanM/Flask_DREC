@@ -1,7 +1,7 @@
 {
   "name": "Drecouvrement",
   "short_name": "Drec",
-  "description": "base de données des astuces de recouvrement des creances",
+  "description": "Base de données des astuces de recouvrement des créances",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -10,12 +10,12 @@
     {
       "src": "/static/2uLgjGtq4u4Uh7PTbKG30AvJFaQ.svg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
       "src": "/static/2uLj3r1phyUxfMGyQyicurrdVpk.svg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ]
 }
